@@ -1,0 +1,82 @@
+use AdventureWorks
+
+--view all data
+select *
+From HumanResources.Employee
+
+--view specific columns
+select LoginID,ManagerID,BirthDate
+from HumanResources.Employee
+
+--Providing Column aliases 
+--type 1
+select 'LogID'=LoginID,'MgrID'=ManagerID,'DOB'=BirthDate
+from HumanResources.Employee
+
+--type 2
+select LoginID as 'LogID',ManagerID as 'MgrID',BirthDate as 'D O b'
+from HumanResources.Employee
+
+--type 3
+select LoginID 'LogID',ManagerID 'MgrID',BirthDate 'D O b'
+from HumanResources.Employee
+
+select EmployeeID,'Designation=>',Title
+from HumanResources.Employee
+
+--Concatenating columns to form a sentence
+--columns have to be of type varchar
+select LoginID+ ' has Designation as ' +Title as sentence
+from HumanResources.Employee
+
+select *
+from HumanResources.EmployeePayHistory
+
+select rate,rate+5 'new rate'
+from HumanResources.EmployeePayHistory
+
+--view specific row
+select *
+From HumanResources.Employee
+where EmployeeID=290
+
+--view rows based on condition
+select *
+From HumanResources.Employee
+where EmployeeID>250
+
+--Records matching more than one conditions
+select *
+From HumanResources.Employee
+where EmployeeID>250 and EmployeeID<270
+
+--Records matching either of the conditions
+select *
+From HumanResources.Employee
+where Title='Quality Assurance Technician' or title='Janitor'
+
+--Records not matching to given condition
+select *
+From HumanResources.Employee
+where not MaritalStatus='S'
+
+
+--Records belonging to particular range
+select *
+From HumanResources.Employee
+where BirthDate between '1976-11-01 00:00:00.000' and '1978-06-11 00:00:00.000'
+
+--Records not belonging to particular range
+select *
+From HumanResources.Employee
+where BirthDate not between '1976-11-01 00:00:00.000' and '1978-06-11 00:00:00.000'
+
+--Records from given set of values
+select *
+From HumanResources.Employee
+where title in('Quality Assurance Technician','Recruiter','Maintenance Supervisor')
+
+--Records having null values
+select *
+From HumanResources.Employee
+where ManagerID is null

@@ -1,0 +1,88 @@
+use AdventureWorks
+
+select * 
+from HumanResources.Employee
+
+--records having title matching to given pattern and having any number of characters after it
+select * 
+from HumanResources.Employee
+where Title like 'Ma%'
+
+--records having title matching to given pattern and having any number of characters before it
+select * 
+from HumanResources.Employee
+where title like '%er'
+
+--records having title matching to given pattern at any position
+select * 
+from HumanResources.Employee
+where title like '%du%'
+
+--records having title matching to given pattern and having single character before it
+select * 
+from HumanResources.Employee
+where title like '_arketing Manager'
+
+
+select * 
+from HumanResources.Employee
+where title like '[MS]%'
+
+--records having title ending with ear and starting with any character from A to D
+select * 
+from HumanResources.Employee
+where title like '[A D]ear'
+
+--records having title ending with ear and starting with any character from A to D
+select * 
+from HumanResources.Employee
+where title like 'A[^D]ear'
+
+--query to replace null values with default value
+select title+' '+firstName+' '+ ISNULL(MiddleName, '')+' '+LastName
+from Person.Contact
+
+--query to return first not null value from given set of values
+--if all the values are null then it will return null
+select title,firstName,coalesce(MiddleName, suffix)
+from Person.Contact
+
+--records displayed in order based on particular column
+--ascending order by default
+select ContactID,managerId,Title,HireDate
+from HumanResources.Employee
+order by HireDate
+
+--records displayed in order based on particular column in descending order
+select ContactID,managerId,Title,HireDate
+from HumanResources.Employee
+order by HireDate desc
+
+--first five records displayed
+select top 5 *
+from HumanResources.Employee
+order by HireDate
+
+--first 10% rows of all rows displayed
+--Employee table consists of 290 records 
+--and hence 10% of 290=> first 29 records are fetched
+select top 10 percent *
+from HumanResources.Employee
+order by HireDate
+
+--fetching records after particular row
+select * 
+from HumanResources.Employee
+order by EmployeeID
+offset 60 rows
+
+--fetching fixed no of records after particular row
+select * 
+from HumanResources.Employee
+order by EmployeeID
+offset 60 rows
+fetch next 10 rows only
+
+--query to avoid duplication in particular row
+select distinct MaritalStatus
+from HumanResources.Employee
