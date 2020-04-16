@@ -95,3 +95,6 @@ select DATEADD(DD,5,GETDATE())
 select datediff(YEAR,'1997-04-25',GETDATE())
 
 select DATEFROMPARTS(2005,04,12)
+
+select EmployeeID,HireDate,DATENAME(mm,HireDate)+','+convert(varchar,DATEPART(yyyy,HireDate)) 'Joining'
+from HumanResources.Employee

@@ -1,0 +1,62 @@
+use AdventureWorks
+
+select EmployeeID,HireDate,DATENAME(mm,HireDate)+','+convert(varchar,DATEPART(yyyy,HireDate)) 'Joining'
+from HumanResources.Employee
+
+
+--Logical Functions
+--choose(as same as switch..case)
+select CHOOSE(4,'Jan','Feb','Mar','Apr','May')
+
+--iif(as same as if)
+select iif(5>7,'Greater','Smaller')
+
+--Ranking Functions
+
+--ROW_NUMBER() separate row number for every row ,irrespective of repetition of rate values
+select EmployeeID,Rate,ROW_NUMBER() over(order by rate desc) 'row number'
+from HumanResources.EmployeePayHistory
+
+--RANK() Repititive row number for rows ,depending on repetition of rate values
+--repetition of ranking skips the subsequent number in sequence
+select EmployeeID,Rate,rank() over(order by rate desc) 'RANK'
+from HumanResources.EmployeePayHistory
+
+--Dense RANK() Repititive row number for every row ,depending on repetition of rate values
+--repetition of ranking does not skip the subsequent number in sequence
+select EmployeeID,Rate,dense_rank() over(order by rate desc) 'Dense RANK'
+from HumanResources.EmployeePayHistory
+
+--ntile divides all the rows in equal sections based on number you've provided
+--total no of rows in employee table:290 divided into 5 equal sections
+select EmployeeID,HireDate,ntile(5) over (order by birthdate) as ntile
+from HumanResources.Employee
+
+--Analytical Functions
+--to perform analysis of current values based on old values
+--not demonstrated yet
+
+--System Function
+select HOST_ID();
+
+select HOST_NAME();
+
+select SUSER_SID('sa')
+
+select SUSER_ID('sa')
+
+select SUSER_SNAME(0x01)
+
+select user_id('sa')
+
+select db_id('adventureworks')
+
+select db_name('7')
+
+select object_id('adventureworks.HumanResources.Employee')
+
+select object_name(901578250)
+
+select cast(NationalIDNumber as char(20) )
+as idnumber
+from HumanResources.Employee
