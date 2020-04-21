@@ -1,0 +1,60 @@
+--Joins
+--Helps us to view data from two tables as a logical view
+--by joining columns and this view is not saved in database as a table for future use
+
+--Following are the types of joins
+--Inner join
+--Outer join
+	--Left outer join
+	--right outer join
+	--full outer join
+--Cross join
+--Equi Join
+--Self join
+
+--Inner Join
+	--shows data which is common in both the relations based on common column
+
+--Base Tables
+select *
+from HumanResources.Employee;
+
+select *
+from HumanResources.EmployeePayHistory
+
+select *
+from HumanResources.EmployeeDepartmentHistory
+
+--fetching data based on employeeid in both tables
+select HumanResources.Employee.employeeid,title,managerid,rate
+from HumanResources.Employee
+inner join
+HumanResources.EmployeePayHistory
+on HumanResources.Employee.EmployeeID=HumanResources.EmployeePayHistory.EmployeeID
+
+--using table aliases to make query compact
+select emp.employeeid,emp.title,emp.managerid,eph.rate
+from HumanResources.Employee emp
+inner join
+HumanResources.EmployeePayHistory eph
+on emp.EmployeeID=eph.EmployeeID
+
+--using where clause and order by
+select emp.employeeid,emp.title,emp.managerid,eph.rate
+from HumanResources.Employee emp
+inner join
+HumanResources.EmployeePayHistory eph
+on emp.EmployeeID=eph.EmployeeID
+where eph.Rate>25
+order by eph.rate
+
+--inner join with multiple tables
+select emp.employeeid,emp.title,emp.managerid,eph.rate,edh.departmentId
+from HumanResources.Employee emp
+inner join
+HumanResources.EmployeePayHistory eph
+on emp.EmployeeID=eph.EmployeeID
+inner join
+HumanResources.EmployeeDepartmentHistory edh
+on emp.ManagerID=edh.EmployeeID;
+
