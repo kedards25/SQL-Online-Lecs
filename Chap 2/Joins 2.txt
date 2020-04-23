@@ -1,0 +1,88 @@
+--Left Outer Join
+
+select * 
+from sales.SpecialOfferProduct
+
+select *
+from sales.SalesOrderDetail
+
+select distinct(p.productId),p1.specialOfferId,p1.SalesOrderId,
+p1.orderQty,p1.unitPrice
+from Sales.SpecialOfferProduct p
+Left Outer Join
+Sales.SalesOrderDetail p1
+on p.ProductID=p1.ProductID
+order by ProductID
+
+
+--Right Outer Join
+
+select *
+from Sales.SalesTerritory
+
+select * 
+from Sales.SalesPerson
+
+
+select st.name as Territory,sp.SalesPersonId
+from Sales.SalesTerritory st
+Right outer join
+sales.SalesPerson sp
+on st.TerritoryID=sp.TerritoryID
+
+--Full Outer Join
+--All the matching and non-matching values from both tables
+select st.name as territory,sp.SalesPersonId
+from sales.SalesTerritory st
+full outer join Sales.SalesPerson sp
+on st.TerritoryID=sp.TerritoryID
+
+
+--Cross Join
+--Cartesian Product
+
+select *
+from std
+
+select *
+from course
+
+select s.name,c.courseName,s.fees+c.tax 
+from std s 
+cross join course c
+
+--Equi Join
+--As Same as inner join but the difference is
+--in inner join we can use criteria as non-equality operator such as '<','>'
+--whereas in equi join we have to use equality operator only
+select * 
+from HumanResources.Employee
+
+select * 
+from HumanResources.EmployeeDepartmentHistory
+
+select * 
+from HumanResources.Department
+
+select *
+from HumanResources.EmployeeDepartmentHistory d
+join HumanResources.Employee e on
+d.EmployeeID=e.EmployeeID
+join HumanResources.Department p
+on p.DepartmentID=d.DepartmentID
+
+--self join
+--Table joins with itself
+--hence given two alias names
+
+select *
+from HumanResources.Employee
+
+select distinct managerId
+from HumanResources.Employee
+
+--Using this query we will select the employees which belong to particular managerId
+select emp.employeeId,emp.title as designation ,emp.managerID,mgr.title as manager_designation
+from HumanResources.Employee emp,HumanResources.Employee mgr
+where emp.ManagerID=mgr.EmployeeID
+
