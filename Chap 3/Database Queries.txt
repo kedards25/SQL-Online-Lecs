@@ -1,0 +1,46 @@
+/*CREATING DATABASE*/
+Create Database SampleDB
+
+CREATE DATABASE TestDB
+ON PRIMARY
+(
+NAME='TestDB_Part1',
+FILENAME='E:\Online Sessions\SQL\Demos\SQL-Online-Lecs\TestDB_Part1.mdf',
+SIZE=5,MAXSIZE=100,FILEGROWTH=1 
+),
+FILEGROUP TestDB_Part2
+(
+NAME = 'TestDB_Part2',
+FILENAME ='E:\Online Sessions\SQL\Demos\SQL-Online-Lecs\TestDB_Part2.ndf',
+SIZE = 2,MAXSIZE=100,FILEGROWTH=1 
+);
+
+--view details/meta data of database
+sp_helpdb TestDB
+
+--DB to support FileStream
+
+CREATE DATABASE TestDB_Profile
+ON PRIMARY
+(
+NAME='TestDB_ProfilePart1',
+FILENAME='E:\Online Sessions\SQL\Demos\SQL-Online-Lecs\DB\TestDB_Part1.mdf',
+SIZE=5,MAXSIZE=100,FILEGROWTH=1 
+),
+FILEGROUP GraphicalTestDB
+contains filestream(
+Name='UserProfiles',
+FILENAME='E:\Online Sessions\SQL\Demos\SQL-Online-Lecs\DB\profiles'
+
+);
+--Enable the access level of filestream from 0 to 2
+Exec sp_configure filestream_access_level,2;
+--completing the above query by reconfiguring
+reconfigure
+
+--rename DB
+--sp_renameDB old_Name,new_Name
+sp_renameDB SampleDb,SampleDB2
+
+--removing database
+drop database SampleDB2

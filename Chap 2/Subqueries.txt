@@ -1,0 +1,166 @@
+--Subquery
+	--single row subquery
+	--inner query returns only single value(row)
+--result of inner query will be the condition for outer query
+select * 
+from HumanResources.Employee
+where Title=
+			(
+				select title 
+				from HumanResources.Employee
+				where EmployeeID=25
+			)
+
+--null condition
+select * 
+from HumanResources.Department
+
+select * 
+from HumanResources.EmployeeDepartmentHistory
+
+select * 
+from HumanResources.Department
+where DepartmentID=
+					(
+						select DepartmentID
+						from HumanResources.EmployeeDepartmentHistory
+						where EmployeeID=46
+						and EndDate is null
+					)
+
+--multiple row subquery
+	--inner query returns more than one row
+
+--IN 
+select * 
+from HumanResources.EmployeeAddress
+
+select * 
+from Person.Address
+
+
+select employeeId 
+from HumanResources.EmployeeAddress
+where AddressID in
+				(
+					select AddressID
+					from Person.Address
+					where City='Bothell'
+				)
+
+
+--here we are checking if  for each employeeID from employee
+--anyone has shifted to deptId=4
+select employeeId,title
+from HumanResources.Employee
+where exists	
+			(
+				select * 
+				from HumanResources.EmployeeDepartmentHistory
+				where EmployeeID=HumanResources.Employee.EmployeeID 
+				and DepartmentID=4
+			)
+
+--Modified Comparison Operator
+select employeeID,title,VacationHours
+from HumanResources.Employee
+where VacationHours >all
+					(
+						select VacationHours
+						from HumanResources.Employee
+						where title='Recruiter'
+					)
+order by VacationHours
+
+select employeeID,title,VacationHours
+from HumanResources.Employee
+where VacationHours >any
+					(
+						select VacationHours
+						from HumanResources.Employee
+						where title='Recruiter'
+					)
+order by VacationHours
+
+--not equals all
+select employeeID,title,VacationHours
+from HumanResources.Employee
+where VacationHours <>all
+					(
+						select VacationHours
+						from HumanResources.Employee
+						where title='Recruiter'
+					)
+order by VacationHours
+
+--not equals all
+select employeeID,title,VacationHours
+from HumanResources.Employee
+where VacationHours <>all
+					(
+						select VacationHours
+						from HumanResources.Employee
+						where title='Recruiter'
+					)
+order by VacationHours
+
+--not equals any
+select employeeID,title,VacationHours
+from HumanResources.Employee
+where VacationHours <>any
+					(
+						select VacationHours
+						from HumanResources.Employee
+						where title='Recruiter'
+					)
+order by VacationHours
+
+select employeeID,title,VacationHours
+from HumanResources.Employee
+where VacationHours =any
+					(
+						select VacationHours
+						from HumanResources.Employee
+						where title='Recruiter'
+					)
+order by VacationHours
+
+--using aggregate functions
+select employeeid,VacationHours
+from HumanResources.Employee
+where VacationHours>		--42
+					(
+					select avg(VacationHours)
+					from HumanResources.Employee
+					where title='Marketing Assistant'
+					)
+order by VacationHours
+
+--nested subquery
+select departmentID 
+from HumanResources.EmployeeDepartmentHistory
+where EmployeeID=
+				(
+					select EmployeeID 
+					from HumanResources.Employee
+					where ContactID=
+									(
+										select ContactID
+										from person.Contact
+										where EmailAddress='taylor0@adventure-works.com'
+									)
+				)
+and EndDate is null
+
+--correlated subquery
+--for each value of outer query
+--inner query will be executed
+--same as nested for loop
+select EmployeeID,Title,VacationHours
+from HumanResources.Employee outerEmpTable
+where outerEmpTable.VacationHours>
+								(
+									select avg(innerEmpTable.vacationHours)
+									from HumanResources.Employee innerEmpTable
+									where outerEmpTable.Title=innerEmpTable.title
+								)

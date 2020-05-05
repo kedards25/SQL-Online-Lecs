@@ -1,0 +1,50 @@
+--RateCTE is temporary result set with column as rate
+with RateCTE(Rate)
+AS
+(
+	Select top 10 rate as rate 
+	from HumanResources.EmployeePayHistory
+)
+select rate,max_rate=
+					(select max(Rate) 
+					from RateCTE) from RateCTE
+
+--following query will not execute as separate query
+--as RateCTE is temporary result set it cannot be referred later
+select * from RateCTE
+
+
+/*ANCHOR and RECURSIVE CTE:*/
+--Part #3 based on Part #1 and Part #2
+WITH DirectReports (ManagerID, EmployeeID, Title, DeptID, Level)
+AS
+(
+--Part #1
+-- Anchor member definition
+    SELECT e.ManagerID, e.EmployeeID, e.Title, edh.DepartmentID, 
+         Level=0
+    FROM HumanResources.Employee AS e
+    INNER JOIN HumanResources.EmployeeDepartmentHistory  edh
+        ON e.EmployeeID = edh.EmployeeID AND edh.EndDate IS NULL
+    WHERE ManagerID IS NULL
+    UNION ALL
+--Part #2 based on part 1
+-- Recursive member definition
+    SELECT e.ManagerID, e.EmployeeID, e.Title, edh.DepartmentID,
+        Level=Level+1
+    FROM HumanResources.Employee  e
+    INNER JOIN HumanResources.EmployeeDepartmentHistory AS edh
+        ON e.EmployeeID = edh.EmployeeID AND edh.EndDate IS NULL
+		--referring to record of level 0 from DirectReports
+    INNER JOIN DirectReports d
+        ON e.ManagerID = d.EmployeeID
+)
+select * 
+from DirectReports
+--Part #4 based on Part #3
+-- Statement that executes the CTE
+SELECT ManagerID, EmployeeID, Title, DeptID, Level
+FROM DirectReports
+INNER JOIN HumanResources.Department AS dp
+    ON DirectReports.DeptID = dp.DepartmentID
+WHERE dp.GroupName = N'Sales and Marketing' OR Level = 0;
