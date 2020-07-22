@@ -1,0 +1,119 @@
+select * 
+from students
+
+--normal insert statement
+insert into students
+values(4,'Sayali','sayali@gmail.com','Lalbag')
+
+--without into keyword
+insert students
+values(5,'Sohail','sohail@gmail.com','Jogeshwari')
+
+-- we have to provide values for all the columns of table and if no value is mentioned for any of the column
+--then mention the value of that column as null
+insert into students
+values(7,'Avdhoot','avdhoot@gmail.com',null)
+
+-- we have to provide values for all the columns of table 
+insert into students
+values(7,'Avdhoot','avdhoot@gmail.com','Khar','Mumbai')
+
+--while inserting the values we have to maintain the order of columns of table
+insert into students
+values('Virar','Avdhoot',8,'avdhoot@gmail.com')
+
+--while inserting the values we have to maintain the order of columns of table
+--or else mention columns explicitly
+insert into students(addr,Std_name,stdId,EmailId)
+values('Virar','Avdhoot',8,'avdhoot@gmail.com')
+
+insert into students(addr,Std_name,stdId)
+values('Virar','Avdhoot',9)
+
+create table sampleTable
+(
+	sampleID int identity(100,5),
+	sampleName varchar(150)
+)
+
+--for table with identity column we need not to provide value by ourself
+insert sampleTable values('Kedar'),('Sankalp'),('Yogesh'),('Priyamvadha'),('Suyeta')
+
+select *
+from sampleTable
+
+--in order  to insert value in identity column
+--we have to execute the following query to set flag 'on'
+--not working
+set identity_insert sampleTable ON
+insert sampleTable values(125,'Kedar')
+
+select *
+from students
+
+--in order to copy data from one table to another
+--we need not create the new table as the data and structure of source table gets copied to target table
+select * 
+into StudentsCopy
+from students
+
+select *
+from StudentsCopy
+
+--inserting FILESTREAM data
+--insert into profiletable(101,'Bala','Chennai',cast('D:/images/profilePhotos/bala.jpg' as varbinary(max)))
+
+--inserting globally unique values
+create table UserTable
+(
+	userId int identity(1,1),
+	userName varchar(50),
+	userKey UNIQUEIDENTIFIER Default(NEWSEQUENTIALID())
+)
+
+insert UserTable(userName) values('Kedar')
+
+select *
+from UserTable
+
+--inserting spatial data
+--space =>spatial
+create table sampleAddress
+(
+	name varchar(50),
+	addr geography
+)
+
+insert into sampleAddress values('Kedar',Geography::Parse('point(19.1074695 72.8486248)'))
+
+select *
+from sampleAddress
+
+--fetching data as latitude and longitude
+select name,addr.ToString() as userAddress
+from sampleAddress
+
+select *
+from students
+
+--update query is used to update column value of particular row
+--update query is used to update attribute value of particular record
+update students
+set EmailId='abhuvad@gmail.com'
+where stdId=9
+
+delete from students
+where stdId=7
+
+--from keyword is optional
+delete students
+where stdId=8
+
+delete sampleTable
+
+delete sampleTable
+where id=7
+
+--this statement executes faster
+--truncate does not support where clause
+truncate table sampleTable

@@ -1,0 +1,20 @@
+--Synonyms
+
+create synonym st4
+for student4
+
+select * 
+from student4
+
+select *
+from st4
+
+--drop synonym st4
+
+sp_rename student4,std4
+
+select * 
+from student4	--error object not found
+
+select *
+from st4

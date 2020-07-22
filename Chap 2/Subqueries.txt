@@ -1,7 +1,11 @@
 --Subquery
+--Query within a query
+--Result of inner query is considered as criteria for execution 	
+--of outer query
+	--type 1:
 	--single row subquery
 	--inner query returns only single value(row)
---result of inner query will be the condition for outer query
+
 select * 
 from HumanResources.Employee
 where Title=
@@ -28,10 +32,22 @@ where DepartmentID=
 						and EndDate is null
 					)
 
+--using aggregate functions
+select employeeid,VacationHours
+from HumanResources.Employee
+where VacationHours>		--42
+					(
+					select avg(VacationHours)
+					from HumanResources.Employee
+					where title='Marketing Assistant'
+					)
+order by VacationHours
+
+--type 2
 --multiple row subquery
 	--inner query returns more than one row
 
---IN 
+--IN(will check for values matching in outer query with range of values received from inner) 
 select * 
 from HumanResources.EmployeeAddress
 
@@ -41,13 +57,12 @@ from Person.Address
 
 select employeeId 
 from HumanResources.EmployeeAddress
-where AddressID in
+where AddressID in 
 				(
 					select AddressID
 					from Person.Address
 					where City='Bothell'
 				)
-
 
 --here we are checking if  for each employeeID from employee
 --anyone has shifted to deptId=4
@@ -55,6 +70,9 @@ select employeeId,title
 from HumanResources.Employee
 where exists	
 			(
+				--first fetch all details of empDeptHistory
+				--for employees whose employee ID is there in empDeptHistory as well as in
+				--Employee and they belong to departmentID 4
 				select * 
 				from HumanResources.EmployeeDepartmentHistory
 				where EmployeeID=HumanResources.Employee.EmployeeID 
@@ -64,7 +82,7 @@ where exists
 --Modified Comparison Operator
 select employeeID,title,VacationHours
 from HumanResources.Employee
-where VacationHours >all
+where VacationHours >all		--result:49,50 so it will fetch rows which have vacationhours >50
 					(
 						select VacationHours
 						from HumanResources.Employee
@@ -74,18 +92,7 @@ order by VacationHours
 
 select employeeID,title,VacationHours
 from HumanResources.Employee
-where VacationHours >any
-					(
-						select VacationHours
-						from HumanResources.Employee
-						where title='Recruiter'
-					)
-order by VacationHours
-
---not equals all
-select employeeID,title,VacationHours
-from HumanResources.Employee
-where VacationHours <>all
+where VacationHours >any	--result:49,50 so it will fetch rows which have vacationhours >49
 					(
 						select VacationHours
 						from HumanResources.Employee
@@ -96,18 +103,20 @@ order by VacationHours
 --not equals all
 select employeeID,title,VacationHours
 from HumanResources.Employee
-where VacationHours <>all
+where VacationHours <>all --result:49,50 so it will fetch rows which have vacationhours except 49,50
 					(
 						select VacationHours
 						from HumanResources.Employee
 						where title='Recruiter'
 					)
 order by VacationHours
+
 
 --not equals any
 select employeeID,title,VacationHours
 from HumanResources.Employee
-where VacationHours <>any
+where VacationHours <>any	--result:49,50 so while checking for not equals 49 it will include records of 50
+							--and while checking for not equals 50 it will include records of 49
 					(
 						select VacationHours
 						from HumanResources.Employee
@@ -125,22 +134,13 @@ where VacationHours =any
 					)
 order by VacationHours
 
---using aggregate functions
-select employeeid,VacationHours
-from HumanResources.Employee
-where VacationHours>		--42
-					(
-					select avg(VacationHours)
-					from HumanResources.Employee
-					where title='Marketing Assistant'
-					)
-order by VacationHours
-
 --nested subquery
 select departmentID 
 from HumanResources.EmployeeDepartmentHistory
 where EmployeeID=
 				(
+					--following query is dependent on inner query
+					--and result of this query will be criteria for outer query
 					select EmployeeID 
 					from HumanResources.Employee
 					where ContactID=
@@ -164,3 +164,6 @@ where outerEmpTable.VacationHours>
 									from HumanResources.Employee innerEmpTable
 									where outerEmpTable.Title=innerEmpTable.title
 								)
+
+
+

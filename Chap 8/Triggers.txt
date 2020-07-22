@@ -1,0 +1,108 @@
+select * from student1
+
+create trigger trg1 on [dbo].[student1]
+after update as
+	begin
+		select * from deleted
+		select * from inserted
+	end
+
+update student1
+set Std_name='Rajesh'
+where EmailId='rajesh@gmail.com';
+
+select * 
+from HumanResources.Shift
+
+create trigger insertTrigger
+on Humanresources.shift
+for insert
+as
+	declare @modifiedDate datetime
+	select @modifiedDate=ModifiedDate
+	from inserted
+	if(@modifiedDate!= GETDATE()) 
+	begin
+		print 'Modified date should be current date'
+		Rollback Transaction
+	end
+return
+
+insert into HumanResources.Shift
+values('general','1900-01-01 09:00:00.000','1900-01-01 06:00:00.000','1900-01-01 23:00:00.000')
+
+create trigger deleteTrigger
+on students
+instead of delete
+as
+begin
+	print 'deletion not allowed'
+	rollback transaction
+end
+
+delete students
+where stdId=2
+
+
+--Update function-Triggers
+
+create trigger trgUpdate
+on [HumanResources].[Employee]
+after update 
+as
+if(update(vacationHours)or update(Title))
+begin
+print'No updation allowed'
+rollback tran
+end
+
+
+update HumanResources.Employee
+set VacationHours=25
+where EmployeeID=1
+
+--drop trigger trgUpdate
+--on HumanResources.Employee
+
+create trigger safetyTrigger
+on database
+for drop_table,alter_table
+as
+	print 'you must disable trigger named "safetyTrigger" to alter or drop'
+	rollback
+
+alter table humanresources.shift
+add working_hours int
+
+--drop trigger safetyTrigger
+--on database
+
+--disable trigger safetyTrigger
+
+--enable trigger safetyTrigger
+
+
+create trigger Event_Info
+on database
+for create_table
+as
+Print 'creating table'
+raiserror('New tables cannnot be created',16,1)
+select eventdata().value('(/event_instance/tsqlcommand/commandtext)[1]','nvarchar(max)')
+--following eventdata function returns an xml containing metadata of the event
+--select eventdata()
+rollback
+
+create table tbl1
+(name varchar(30),
+Id int)
+
+--disable trigger event_info
+--on database
+
+drop trigger event_info
+on database
+
+
+
+

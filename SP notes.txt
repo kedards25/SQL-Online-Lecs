@@ -1,0 +1,6 @@
+Table used in batch statement cannot be altered later to add columnsnf if we do so then that new column cannot be referred in batch created earlier
+
+in order to use batch function in future again and again
+we can enclose it in a block by giving a name and that is called as stored procedure
+
+stored procedure->precompiled object in DB

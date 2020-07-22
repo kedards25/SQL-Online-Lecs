@@ -1,0 +1,62 @@
+select *
+from students
+
+update students
+set addr='VPE1'
+output deleted.*
+into studentsCopy
+where stdId=1
+
+select * 
+from StudentsCopy
+
+select *
+from students
+
+select*
+from StudentsCopy
+
+--merging query
+--target table
+merge studentsCopy as stdCpy									--alias name of target table
+--source table
+using students as stds											--alias name of source table
+on(stds.stdid=stdCpy.stdid)										--criteria to be matched
+when matched and stds.addr<>stdCpy.addr							--if criteria is matched but not the value of addr column
+then update set stdCpy.addr=stds.addr							--then update addr from source to target
+when not matched												--if criteria is not matched i.e. if the stdid is not there in target table
+then insert values(stds.stdid,stds.std_name,stds.emailid,stds.addr)--then insert new row in target table
+when not matched by source										--if criteria is not matched by source i.e. if the stdid is not there in source table
+then delete ;													--delete records from target table
+
+select * 
+from StudentsCopy;
+
+create view stdView
+as
+select stdid,std_name,addr
+from students
+where stdid>3
+--order by clause cannot be used in views
+--order by Std_name;
+
+select *
+from stdView
+
+update stdView
+set addr='Khar'
+where stdid = 9
+
+alter view stdView
+as
+select stdid,EmailId,addr
+from students
+where stdid>3
+
+
+sp_rename  stdView, studentsView
+
+select *
+from studentsView
+
+--drop view studentsView

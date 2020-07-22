@@ -1,0 +1,58 @@
+Create table StudentsIndTable
+(
+	Std_id int identity(1,1),
+	Std_name varchar(30),
+	Std_Email varchar(50),
+	Contact bigint
+)
+
+--Now we will create index in the Std_id coloumn
+
+--Type of Index
+---1. Clustered
+---2. NonClustered
+	--A. Unique NonClustered
+	--B. NonUnique NonClustered
+--Note--1. We can create only one CLUSTERED index on one table
+	 ---2. We can create more then on NONCLUSTERED index on one table.
+--Composite Index	 
+	 --an Index with one or more columns is called as composite index
+	 --it can be formed from maximum of 16 columns
+	 --Maximum sixe is 900 bytes
+--Whenever Primary key or Unique key is defined for the table
+--an index is automatically generated with same name as key
+
+--Filtered index
+--Creating and maintaining the index on table containing large number of rows is quiet difficult 
+--and time consuming,in order to avoid it we can create filtered index
+--Filtered index allows to create index on specific rows of columns instead of creating filter on whole table
+--only nonclustered filtered index can be created on the table(allows us to create multiple filtered indexes)
+	  
+--First Create NONCLUSTERED INDEX on the tble.
+-----By default index is NONUNIQUE and NONCLUSTERED 
+Create NonClustered index idx_NonUnique_NonClus
+on StudentsIndTable(Std_id)
+
+-----Now we will create UNIQUE and NONCLUSTERED  index  
+Create Unique NonClustered index idx_Unique_NonClus
+on StudentsIndTable(Std_id)
+
+-----Now we will create CLUSTERED  index .
+Create Unique Clustered index idx_Unique_Clus
+on StudentsIndTable(Std_id)
+
+--Disabling Index
+--Alter index idx_Unique_Clus on std1 Disable
+
+----Enabling Index(Rebuild)
+--Alter index idx_Unique_Clus on std1 Rebuild
+
+--Renaming Index
+--Exec sp_rename '[dbo].[std1].[idx_Unique_Clus]','idx_Unique_Clustered','index'
+--
+
+--Droping Index
+--Drop index [idx_Unique_Clustered] on [dbo].[std1]
+
+
+
